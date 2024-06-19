@@ -1,0 +1,28 @@
+---
+- hosts: php
+sudo: yes
+tasks:
+- name: install packages
+apt: name={{ item }} update_cache=yes state=latest
+with_items:
+- php72-cli
+- php72-curl
+- php72-fpm
+- php72-intl
+- php72-json
+- php72-mcrypt
+- php72-sqlite
+- name: ensure php72-fpm cgi.fix_pathinfo=0
+lineinfile: dest=/etc/php72/fpm/php.ini regexp='^(.*)cgi.fix_pathinfo=' line=cgi.fix_pathinfo=0
+notify:
+- restart php72-fpm
+- restart nginx
+- name: enable php72 mcrypt module
+shell: php5enmod mcrypt
+args:
+creates: /etc/php72/cli/conf.d/20-mcrypt.ini
+handlers:
+- name: restart php72-fpm
+service: name=php72-fpm state=restarted
+- name: restart nginx
+service: name=nginx state=restarted
