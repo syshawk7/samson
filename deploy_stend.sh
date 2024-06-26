@@ -23,3 +23,4 @@ vagrant box add --name deb9 debian9.box
 vagrant up
 
 # необходимые пакеты ставятся с помощью Vagrant provisioner (также правится порт apache2 на 8888)
+# проверка через kate
